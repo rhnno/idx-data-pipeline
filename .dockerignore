@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+logs/
+.git/
+.gitignore
+*.md
+!docs/DATA_LIMITATIONS.md
+!docs/VALIDATION_REPORT.md
+.flake8
+pyproject.toml

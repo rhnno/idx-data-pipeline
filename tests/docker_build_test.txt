@@ -1,0 +1,30 @@
+# Real Docker build/run test
+#
+# This sandbox does not have a Docker daemon (`docker` command itself is
+# not installed), so these commands have NOT been executed against this
+# Dockerfile - only simulated, via tests/test_dockerfile_sim.sh. Run these
+# yourself wherever Docker is available (your laptop, CI) before trusting
+# the image is genuinely correct, not just logically consistent.
+
+# 1. Build the image
+docker build -t idx-data-pipeline:test .
+
+# 2. Default CMD should run `validate` and exit 0 even with no network
+#    and no volumes mounted, since the dataset ships inside the image.
+docker run --rm idx-data-pipeline:test
+echo "exit code: $?"
+
+# 3. Confirm it's actually running as the non-root user, not root
+docker run --rm idx-data-pipeline:test python -c "import os; print(os.getuid())"
+# expect: a non-zero uid (not 0/root)
+
+# 4. Confirm the test suite passes inside the built image, not just in a
+#    simulated venv on the host
+docker run --rm --entrypoint python idx-data-pipeline:test -m pip install pytest
+docker run --rm --entrypoint python idx-data-pipeline:test -m pytest tests/ -q
+
+# 5. Confirm overriding the default command works (e.g. scrape-prices)
+docker run --rm idx-data-pipeline:test python main.py scrape-prices
+# expect: network error or warning, not a crash from missing module/config -
+# this container has no network egress configured by default, so a clean
+# failure message here is correct behavior, not a bug.

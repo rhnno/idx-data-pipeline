@@ -1,0 +1,6 @@
+symbol,ex_date,split_ratio,cumulative_multiplier,verified,source
+ASII,2004-03-01,10.0,10.0,True,KSEI_IDX_Archive
+BBCA,2004-05-28,2.0,2.0,True,KSEI_IDX_Archive
+BBCA,2007-06-25,2.0,4.0,True,KSEI_IDX_Archive
+TLKM,2004-08-23,2.0,2.0,True,KSEI_IDX_Archive
+UNVR,2003-08-06,10.0,10.0,True,KSEI_IDX_Archive

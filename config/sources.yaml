@@ -1,0 +1,58 @@
+# Source and ticker registry for the price scraping layer.
+# Add a new ticker by adding one entry under `tickers`. Add a new source by
+# writing an adapter under pipeline/adapters/ and registering it here.
+
+sources:
+  - name: yahoo
+    enabled: true
+    priority: 1
+    adapter: pipeline.adapters.yahoo.YahooAdapter
+    rate_limit_seconds: 1.0
+    retry:
+      max_attempts: 3
+      backoff_seconds: 2
+
+  # WSJ's public historical-prices/download endpoint was retired by WSJ and
+  # no longer returns data. Kept here, disabled, as a record of why — not
+  # deleted, so nobody re-discovers this the hard way.
+  - name: wsj
+    enabled: false
+    priority: 2
+    adapter: pipeline.adapters.wsj.WSJAdapter
+    disabled_reason: "Endpoint retired by WSJ; confirmed dead, not a transient failure."
+
+  # Investing.com's historical data table is JS-rendered and requires a
+  # descriptive URL slug (e.g. 'bank-central-asia'), not a ticker code.
+  # No working adapter exists for this source yet.
+  - name: investing
+    enabled: false
+    priority: 3
+    adapter: pipeline.adapters.investing.InvestingAdapter
+    disabled_reason: "No working adapter implemented; requires slug mapping + JS rendering workaround."
+
+# How to combine results when more than one enabled source has data for the
+# same ticker. 'per_date_gap_fill' merges sources at the row level (lower
+# priority fills only the dates higher-priority sources are missing) instead
+# of picking one source's full output and discarding the rest.
+merge_strategy: per_date_gap_fill
+
+date_range:
+  start: "2002-01-01"
+  end: "2007-12-31"
+
+tickers:
+  - local: BBCA
+    yahoo_symbol: BBCA.JK
+    wsj_symbol: BBCA.ID
+  - local: UNVR
+    yahoo_symbol: UNVR.JK
+    wsj_symbol: UNVR.ID
+  - local: TLKM
+    yahoo_symbol: TLKM.JK
+    wsj_symbol: TLKM.ID
+  - local: PTBA
+    yahoo_symbol: PTBA.JK
+    wsj_symbol: PTBA.ID
+  - local: ASII
+    yahoo_symbol: ASII.JK
+    wsj_symbol: ASII.ID

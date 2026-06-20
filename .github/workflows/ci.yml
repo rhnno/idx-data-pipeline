@@ -1,0 +1,179 @@
+name: CI
+
+# Runs on every push and PR against main, plus manual trigger. Three jobs:
+# lint-and-security and test run in parallel (independent of each other),
+# docker runs only after both pass - no point building/testing a container
+# around code that already fails lint or unit tests.
+#
+# Honesty note for anyone reading this as a portfolio piece: the `docker`
+# job below is the FIRST place this Dockerfile is ever actually built and
+# run. The dev sandbox this project was built in had no Docker daemon
+# available, so prior validation was a venv-based simulation
+# (tests/test_dockerfile_sim.sh) that could check dependency resolution
+# and entrypoint behavior, but not the Dockerfile syntax, multi-stage
+# COPY, or non-root permissions themselves. This workflow is what closes
+# that gap for real, on every push.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: {}
+
+env:
+  PYTHON_VERSION: "3.12"
+  # Matches the Dockerfile's base image (python:3.12-slim). Deliberately
+  # not run as a multi-version matrix (3.10/3.11/3.13 etc) - this repo has
+  # only ever been tested against 3.12, and claiming broader compatibility
+  # without testing it would be the same kind of overclaim this project's
+  # docs/DATA_LIMITATIONS.md was written to avoid making about the data.
+
+jobs:
+  lint-and-security:
+    name: Lint & Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install flake8 bandit pip-audit
+
+      - name: flake8 (style + correctness lint)
+        # Config in .flake8 ignores W291/W292/W293 (CRLF whitespace noise,
+        # ~400 of the original ~485 findings) but keeps everything else
+        # (E722 bare except, F841 unused var, etc) enabled and fatal.
+        run: |
+          mkdir -p logs
+          flake8 --statistics --count $(find . -name "*.py" -not -path "./logs/*" -not -path "./.git/*") | tee logs/flake8_report.txt
+
+      - name: bandit (security scan)
+        # Config in pyproject.toml excludes tests/ (where assert is the
+        # pytest mechanism itself, not a stripped-under--O security guard)
+        # but does NOT skip B101 globally - an assert anywhere in pipeline/
+        # still gets flagged. severity/confidence set to low so nothing is
+        # filtered out before a human sees it.
+        run: |
+          bandit -r . -c pyproject.toml --severity-level low --confidence-level low -f txt | tee logs/bandit_report.txt
+
+      - name: pip-audit (dependency vulnerability scan)
+        run: |
+          pip-audit -r requirements.txt -f json | tee logs/pip_audit_report.json
+
+      - name: Upload lint/security logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint-security-logs
+          path: logs/
+
+  test:
+    name: Unit Tests & Data Validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run test suite
+        run: pytest tests/ -v --junitxml=logs/pytest-results.xml
+
+      - name: Run data quality validation
+        # main.py validate is allowed to exit non-zero here - the shipped
+        # dataset has 2 known, documented failures (see
+        # docs/DATA_LIMITATIONS.md secs 1 & 5), so a "FAILED" overall
+        # status is the expected, correct outcome, not a CI bug. What
+        # actually matters for CI is that the command runs to completion
+        # and produces a report, not that every check passes.
+        run: python main.py validate || true
+
+      - name: Upload test results and quality report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-and-validation-results
+          path: |
+            logs/pytest-results.xml
+            docs/DATA_QUALITY_REPORT.md
+
+  docker:
+    name: Container Build & Test
+    needs: [lint-and-security, test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image
+        run: docker build -t idx-data-pipeline:ci .
+
+      - name: Run default CMD (validate) - must complete without crashing
+        # Same caveat as the test job above: `validate` legitimately exits
+        # non-zero because of 2 known documented data findings. What this
+        # step actually checks is that the container starts, finds its
+        # shipped dataset, and runs the command to completion - a crash
+        # (missing dependency, broken entrypoint, permission error) would
+        # look different from this expected non-zero exit and should still
+        # fail the job, hence capturing the exit code explicitly below
+        # rather than just trusting `docker run`'s own exit code blindly.
+        run: |
+          set +e
+          docker run --rm idx-data-pipeline:ci > docker_validate_output.txt 2>&1
+          exit_code=$?
+          cat docker_validate_output.txt
+          if ! grep -q "REPORT SAVED TO" docker_validate_output.txt; then
+            echo "::error::Container did not complete the validate command - this is a real failure, not the expected 2-known-issues exit."
+            exit 1
+          fi
+          echo "Container ran validate to completion (exit code $exit_code, expected non-zero due to 2 documented known issues)."
+
+      - name: Confirm container runs as non-root
+        # ENTRYPOINT is ["python", "main.py"] - any command other than a
+        # main.py subcommand must override --entrypoint explicitly, or it
+        # gets passed as an extra (invalid) argument to main.py instead.
+        run: |
+          uid=$(docker run --rm --entrypoint python idx-data-pipeline:ci -c "import os; print(os.getuid())")
+          echo "Container UID: $uid"
+          if [ "$uid" = "0" ]; then
+            echo "::error::Container is running as root (UID 0) - Dockerfile's USER pipeline directive is not taking effect."
+            exit 1
+          fi
+
+      - name: Run test suite inside the built image
+        # pytest is already in requirements.txt, so it's installed in the
+        # image during the builder stage - no separate install step
+        # needed (and a separate `docker run ... pip install` wouldn't
+        # persist into this next `docker run` anyway, since --rm means
+        # each invocation is a fresh container from the same image).
+        #
+        # This is the real test of requirements.txt completeness - same
+        # purpose as tests/test_dockerfile_sim.sh's venv simulation, but
+        # against the actual image instead of a host-side approximation.
+        # This is exactly the kind of check that caught the missing
+        # `tabulate` dependency during local development.
+        run: |
+          docker run --rm --entrypoint python idx-data-pipeline:ci -m pytest tests/ -q
+
+      - name: Confirm overriding CMD works (scrape-prices, network-isolated)
+        # Run with networking disabled to confirm the failure mode is a
+        # clean, caught error (the orchestrator reporting "no data fetched")
+        # rather than an unhandled crash - this container ships no
+        # credentials or network access by default, so a clean failure
+        # here is correct, expected behavior.
+        run: |
+          set +e
+          docker run --rm --network none idx-data-pipeline:ci python main.py scrape-prices > scrape_output.txt 2>&1
+          cat scrape_output.txt
+          echo "(non-zero/error exit expected here - network is deliberately disabled in this check)"

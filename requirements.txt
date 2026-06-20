@@ -1,0 +1,22 @@
+# Floors below are set to the versions actually validated against this
+# repo's test suite (pytest tests/), not an arbitrary historical guess.
+# The previous floors (e.g. yfinance>=0.2, numpy>=1.24) were low enough to
+# permit installing a pre-1.0 yfinance or pre-2.0 numpy release that was
+# never tested here and may behave differently (numpy 2.0 and yfinance 1.0
+# both shipped real breaking API changes vs their predecessors).
+pandas>=3.0
+numpy>=2.4
+requests>=2.33
+beautifulsoup4>=4.14
+pytest>=9.0
+pyyaml>=6.0
+yfinance>=1.4
+# pandas.DataFrame.to_markdown() (used 7x in pipeline/data_quality.py for
+# report formatting) is an optional pandas feature backed by the
+# `tabulate` package - pandas does not bundle it. This was missing
+# entirely until caught by simulating the Dockerfile's isolated `pip
+# install -r requirements.txt` in a clean venv; it had been silently
+# working in every prior dev/test run only because tabulate was already
+# present as a transitive dependency of something else already installed
+# in that environment.
+tabulate>=0.9

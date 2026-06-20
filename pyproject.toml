@@ -1,0 +1,12 @@
+[tool.bandit]
+# B101 (assert_used) accounted for 93 of bandit's 94 findings, all inside
+# tests/. Bandit flags assert generically because it's stripped under
+# `python -O`, which matters for assert-based security/validation checks
+# in shipped production code - it does not apply to pytest test files,
+# where assert IS the test mechanism itself, by design, not a guard that
+# needs to survive optimization.
+#
+# Scoped as a directory exclusion rather than a global `skips = ["B101"]`
+# so that if assert is ever used as an actual guard inside pipeline/ code
+# in the future, it still gets flagged there.
+exclude_dirs = ["tests", ".git", "logs"]

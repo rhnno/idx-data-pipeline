@@ -1,0 +1,101 @@
+./main.py:26:1: F401 'sys' imported but unused
+./pipeline/data_quality.py:19:1: F401 'typing.Dict' imported but unused
+./pipeline/data_quality.py:19:1: F401 'typing.List' imported but unused
+./pipeline/data_quality.py:19:1: F401 'typing.Tuple' imported but unused
+./pipeline/data_quality.py:131:17: E128 continuation line under-indented for visual indent
+./pipeline/data_quality.py:165:25: E128 continuation line under-indented for visual indent
+./pipeline/data_quality.py:190:17: E128 continuation line under-indented for visual indent
+./pipeline/data_quality.py:216:17: E128 continuation line under-indented for visual indent
+./pipeline/data_quality.py:238:17: E128 continuation line under-indented for visual indent
+./pipeline/data_quality.py:259:121: E501 line too long (124 > 120 characters)
+./pipeline/data_quality.py:263:17: E128 continuation line under-indented for visual indent
+./pipeline/data_quality.py:278:58: E712 comparison to True should be 'if cond is True:' or 'if cond:'
+./pipeline/data_quality.py:312:42: E712 comparison to True should be 'if cond is True:' or 'if cond:'
+./pipeline/data_quality.py:341:21: E128 continuation line under-indented for visual indent
+./pipeline/data_quality.py:387:18: F541 f-string is missing placeholders
+./pipeline/data_quality.py:388:17: E128 continuation line under-indented for visual indent
+./pipeline/data_quality.py:453:25: E128 continuation line under-indented for visual indent
+./pipeline/data_quality.py:454:25: E128 continuation line under-indented for visual indent
+./pipeline/data_quality.py:500:18: F541 f-string is missing placeholders
+./pipeline/data_quality.py:501:18: F541 f-string is missing placeholders
+./pipeline/data_quality.py:507:17: E128 continuation line under-indented for visual indent
+./pipeline/data_quality.py:516:18: F541 f-string is missing placeholders
+./pipeline/dividend_scraper.py:6:1: F401 're' imported but unused
+./pipeline/dividend_scraper.py:8:1: E302 expected 2 blank lines, found 1
+./pipeline/dividend_scraper.py:136:13: F841 local variable 'split_date' is assigned to but never used
+./pipeline/dividend_scraper.py:251:15: F541 f-string is missing placeholders
+./pipeline/dividend_scraper.py:257:15: F541 f-string is missing placeholders
+./pipeline/dividend_scraper.py:259:9: F841 local variable 'summary' is assigned to but never used
+./pipeline/dividend_scraper.py:285:11: F541 f-string is missing placeholders
+./pipeline/orchestrator.py:12:1: F401 'typing.List' imported but unused
+./pipeline/orchestrator.py:77:121: E501 line too long (121 > 120 characters)
+./pipeline/rate_scraper.py:4:1: F401 'pathlib.Path' imported but unused
+./pipeline/rate_scraper.py:6:1: E302 expected 2 blank lines, found 1
+./pipeline/rate_scraper.py:34:26: E261 at least two spaces before inline comment
+./pipeline/rate_scraper.py:35:26: E261 at least two spaces before inline comment
+./pipeline/rate_scraper.py:36:26: E261 at least two spaces before inline comment
+./pipeline/rate_scraper.py:37:26: E261 at least two spaces before inline comment
+./pipeline/rate_scraper.py:62:121: E501 line too long (135 > 120 characters)
+./pipeline/rate_scraper.py:178:15: F541 f-string is missing placeholders
+./pipeline/rate_scraper.py:182:15: F541 f-string is missing placeholders
+./pipeline/rate_scraper.py:188:15: F541 f-string is missing placeholders
+./pipeline/rate_scraper.py:192:15: F541 f-string is missing placeholders
+./pipeline/rate_scraper.py:196:15: F541 f-string is missing placeholders
+./pipeline/rate_scraper.py:197:15: F541 f-string is missing placeholders
+./pipeline/schema.py:29:1: F401 'pathlib.Path' imported but unused
+./pipeline/schema.py:32:1: F401 'numpy as np' imported but unused
+./pipeline/schema.py:60:37: E127 continuation line over-indented for visual indent
+./pipeline/schema.py:62:37: E127 continuation line over-indented for visual indent
+./pipeline/schema.py:68:37: E127 continuation line over-indented for visual indent
+./pipeline/schema.py:70:37: E127 continuation line over-indented for visual indent
+./pipeline/schema.py:72:37: E127 continuation line over-indented for visual indent
+./pipeline/schema.py:76:37: E127 continuation line over-indented for visual indent
+./pipeline/schema.py:78:37: E127 continuation line over-indented for visual indent
+./pipeline/split_log_builder.py:3:1: F401 'requests' imported but unused
+./pipeline/split_log_builder.py:4:1: F401 'bs4.BeautifulSoup' imported but unused
+./pipeline/split_log_builder.py:5:1: F401 'datetime.datetime' imported but unused
+./pipeline/split_log_builder.py:7:1: F401 'pathlib.Path' imported but unused
+./pipeline/split_log_builder.py:8:1: F401 'typing.Tuple' imported but unused
+./pipeline/split_log_builder.py:16:1: E302 expected 2 blank lines, found 1
+./pipeline/split_log_builder.py:88:25: E128 continuation line under-indented for visual indent
+./pipeline/split_log_builder.py:191:32: E127 continuation line over-indented for visual indent
+./pipeline/split_log_builder.py:192:32: E127 continuation line over-indented for visual indent
+./pipeline/split_log_builder.py:240:19: F541 f-string is missing placeholders
+./pipeline/split_log_builder.py:249:31: E127 continuation line over-indented for visual indent
+./tests/test_adapters.py:12:1: F401 'pytest' imported but unused
+./tests/test_orchestrator_merge.py:9:1: F401 'pytest' imported but unused
+./tests/test_stock_split.py:206:11: F541 f-string is missing placeholders
+./tests/test_stock_split.py:267:11: F541 f-string is missing placeholders
+./tests/test_stock_split.py:277:11: F541 f-string is missing placeholders
+./tests/test_stock_split.py:320:19: E712 comparison to True should be 'if cond is True:' or 'if cond:'
+./tests/test_stock_split.py:331:19: E712 comparison to False should be 'if cond is False:' or 'if not cond:'
+./tests/test_stock_split.py:342:19: E712 comparison to False should be 'if cond is False:' or 'if not cond:'
+./tests/test_stock_split.py:385:11: F541 f-string is missing placeholders
+./tests/test_stock_split.py:421:11: F541 f-string is missing placeholders
+./tests/test_stock_split.py:441:40: F541 f-string is missing placeholders
+./tests/test_stock_split.py:456:33: F541 f-string is missing placeholders
+./tests/test_stock_split.py:457:11: F541 f-string is missing placeholders
+./tests/test_suku_bunga.py:6:1: F401 'numpy as np' imported but unused
+./tests/test_suku_bunga.py:13:1: F401 'pipeline.rate_scraper.validate_financial_accuracy' imported but unused
+./tests/test_suku_bunga.py:13:1: E402 module level import not at top of file
+./tests/test_suku_bunga.py:15:1: E302 expected 2 blank lines, found 1
+./tests/test_suku_bunga.py:38:1: E302 expected 2 blank lines, found 1
+./tests/test_suku_bunga.py:71:1: E302 expected 2 blank lines, found 1
+./tests/test_suku_bunga.py:103:1: E302 expected 2 blank lines, found 1
+./tests/test_suku_bunga.py:144:1: E302 expected 2 blank lines, found 1
+./tests/test_suku_bunga.py:174:1: E302 expected 2 blank lines, found 1
+./tests/test_suku_bunga.py:201:1: E302 expected 2 blank lines, found 1
+./tests/test_suku_bunga.py:233:1: E302 expected 2 blank lines, found 1
+./tests/test_suku_bunga.py:283:1: E305 expected 2 blank lines after class or function definition, found 1
+10    E127 continuation line over-indented for visual indent
+12    E128 continuation line under-indented for visual indent
+4     E261 at least two spaces before inline comment
+11    E302 expected 2 blank lines, found 1
+1     E305 expected 2 blank lines after class or function definition, found 1
+1     E402 module level import not at top of file
+3     E501 line too long (124 > 120 characters)
+5     E712 comparison to True should be 'if cond is True:' or 'if cond:'
+18    F401 'sys' imported but unused
+22    F541 f-string is missing placeholders
+2     F841 local variable 'split_date' is assigned to but never used
+89

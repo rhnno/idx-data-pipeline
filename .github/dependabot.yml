@@ -1,0 +1,16 @@
+# Automated dependency update PRs, scoped to weekly so this doesn't spam
+# noise into a portfolio repo's PR history. Two ecosystems: pip
+# (requirements.txt) and the Dockerfile's base image.
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 3

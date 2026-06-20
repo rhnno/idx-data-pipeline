@@ -1,0 +1,10 @@
+=== config/sources.yaml ===
+Syntax: OK (parses as valid YAML)
+Top-level keys: ['sources', 'merge_strategy', 'date_range', 'tickers']
+=== config/quality_rules.yaml ===
+Syntax: OK (parses as valid YAML)
+Top-level keys: ['outlier_threshold_pct', 'gap_detection', 'split_log_path', 'apply_split_adjustment', 'price_sanity', 'expected_trading_days']
+
+=== Structural validation against pipeline/config.py loaders ===
+sources.yaml: loads cleanly via load_sources_config() - 3 sources, 5 tickers, merge_strategy=per_date_gap_fill
+quality_rules.yaml: loads cleanly via load_quality_rules() - outlier_threshold_pct=50, apply_split_adjustment=False

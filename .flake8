@@ -1,0 +1,11 @@
+[flake8]
+max-line-length = 120
+
+# W291/W292/W293 (trailing whitespace / no newline at EOF / whitespace-only
+# blank lines) account for ~400 of ~485 raw findings in this codebase.
+# These come from CRLF line endings in files originally authored on
+# Windows (see git history / logs/flake8_report.txt for the pre-config
+# baseline) - cosmetic, zero behavioral risk, and not informative at this
+# volume. Everything else flake8 catches (E722 bare except, F841 unused
+# variable, E402, F401, etc.) stays enabled and visible.
+extend-ignore = W291, W292, W293

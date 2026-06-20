@@ -1,0 +1,31 @@
+# Thresholds and paths for the data quality / validation layer.
+# Changing a number here should never require touching pipeline/data_quality.py.
+
+outlier_threshold_pct: 50
+
+gap_detection:
+  flag_gap_days_above: 10
+
+split_log_path: data/reference/corporate_action_split_log.csv
+
+# See docs/DATA_LIMITATIONS.md section 2 before flipping this on: the
+# shipped price data already trades cleanly through known split dates, and
+# re-applying backward-adjustment on top of it was verified to manufacture
+# fake price jumps rather than remove real ones.
+apply_split_adjustment: false
+
+price_sanity:
+  min_close: 1
+  max_close: 1000000
+  require_close_within_low_high: true
+
+# Used by the "trading days per ticker" check. Update when new tickers are
+# added or the date range changes; this is intentionally NOT auto-derived
+# from the data itself, so a silently-shrinking dataset gets caught instead
+# of the check quietly adjusting its own expectations.
+expected_trading_days:
+  ASII: 1564
+  BBCA: 929
+  PTBA: 1310
+  TLKM: 849
+  UNVR: 1128
