@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # --- Stage 1: build/install dependencies in isolation -----------------------
-FROM python:3.12-slim AS builder
+FROM python:3.14-slim AS builder
 
 WORKDIR /build
 
@@ -13,7 +13,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir --user -r requirements.txt
 
 # --- Stage 2: runtime image ---------------------------------------------------
-FROM python:3.12-slim
+FROM python:3.14-slim
 
 # Run as a non-root user. This pipeline writes to data/raw, data/processed,
 # and docs/ at runtime (scrape-prices, validate) - granting only that user
