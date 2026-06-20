@@ -5,7 +5,7 @@
 # never tested here and may behave differently (numpy 2.0 and yfinance 1.0
 # both shipped real breaking API changes vs their predecessors).
 pandas>=3.0
-numpy>=2.4
+numpy>=2.4.6
 requests>=2.33
 beautifulsoup4>=4.14
 pytest>=9.0
