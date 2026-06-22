@@ -32,8 +32,6 @@ def test_memory_efficiency():
     print(f"\n✅ Total memory usage: {memory_kb:.2f} KB")
     assert memory_kb < 10, f"Memory usage too high: {memory_kb:.2f} KB"
     print("✅ Memory usage within acceptable range (< 10 KB)")
-    
-    return True
 
 def test_historical_rate_validation():
     """Test: All hardcoded historical rates must be validated with tolerance-based assertions"""
@@ -66,7 +64,6 @@ def test_historical_rate_validation():
         print(f"✅ {date_str}: {actual_rate:.2f}% (expected: {expected_rate:.2f}%)")
     
     print("\n✅ All critical historical rates validated")
-    return True
 
 def test_crisis_period_interpolation():
     """Test: Use 'time'-based interpolation for financial crisis periods"""
@@ -97,8 +94,6 @@ def test_crisis_period_interpolation():
     sep_rate = float(df.loc['2005-09-01', 'BI_Rate_Percentage'])
     assert sep_rate > aug_rate, "❌ September should show rate hike"
     print(f"✅ September 2005: {sep_rate:.2f}% (shows tightening)")
-    
-    return True
 
 def test_dataframe_structure():
     """Test: DataFrame must include specific columns for Sharpe Ratio calculation"""
@@ -138,8 +133,6 @@ def test_dataframe_structure():
         f"❌ Risk_Free_Monthly incorrect: {risk_free} vs {expected_risk_free}"
     
     print(f"✅ Risk_Free_Monthly verified: {risk_free:.6f}")
-    
-    return True
 
 def test_data_completeness():
     """Test: Complete 72-month period from Jan 2002 to Dec 2007"""
@@ -168,8 +161,6 @@ def test_data_completeness():
     assert (df['BI_Rate_Percentage'] >= 0).all(), "❌ Contains negative rates"
     assert (df['SBI_Rate_Percentage'] >= 0).all(), "❌ Contains negative rates"
     print("✅ All rates are non-negative")
-    
-    return True
 
 def test_error_handling():
     """Test: Error handling uses specific exception types"""
@@ -196,7 +187,6 @@ def test_error_handling():
         print(f"✅ Exception handler present: {exc_type}")
     
     print("\n✅ All required exception types are handled")
-    return True
 
 def test_sharpe_ratio_export():
     """Test: Export format supports Sharpe Ratio calculation"""
@@ -227,8 +217,6 @@ def test_sharpe_ratio_export():
     # Clean up test file
     Path(output_file).unlink()
     print(f"✅ Cleaned up test file: {output_file}")
-    
-    return True
 
 def run_all_tests():
     """Run all test suites"""
@@ -275,10 +263,8 @@ def run_all_tests():
     
     if passed == total:
         print("\n🎉 ALL TESTS PASSED! Code meets all project specifications.")
-        return 0
     else:
         print(f"\n⚠️ {total - passed} test(s) failed. Please review the errors above.")
-        return 1
-
+        
 if __name__ == "__main__":
     sys.exit(run_all_tests())

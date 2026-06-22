@@ -85,7 +85,6 @@ def test_data_integrity_cross_verification():
     else:
         print("✅ All ex-dates fall on valid trading days")
     
-    return True
 
 
 def test_o1_lookup_complexity():
@@ -143,7 +142,6 @@ def test_o1_lookup_complexity():
     assert lookup['TLKM']['2004-08-23'] == 2.0, "❌ TLKM split ratio incorrect"
     print("✅ TLKM: 2.0× cumulative after 2004-08-23")
     
-    return True
 
 
 def test_cumulative_multiplier_function():
@@ -186,7 +184,6 @@ def test_cumulative_multiplier_function():
     assert bbca_final == 4.0, f"❌ BBCA cumulative should be 4.0×, got {bbca_final}"
     print(f"\n✅ BBCA cumulative verification: 2×2 = {int(bbca_final)}× (CORRECT)")
     
-    return True
 
 
 def test_memory_efficiency():
@@ -246,7 +243,6 @@ def test_memory_efficiency():
         f"❌ Close_Adj dtype: {adjusted_df['Close_Adj'].dtype}"
     print(f"✅ Close_Adj dtype: {adjusted_df['Close_Adj'].dtype}")
     
-    return True
 
 
 def test_secondary_offering_handling():
@@ -297,8 +293,7 @@ def test_secondary_offering_handling():
     print("✅ Secondary offerings correctly separated from splits")
     print("   → Splits adjust historical prices")
     print("   → Rights issues require Theoretical Ex-Rights Price calculation")
-    
-    return True
+
 
 
 def test_validation_flag():
@@ -341,8 +336,6 @@ def test_validation_flag():
     result = validate_price_adjustment(incomplete_data, 'BBCA', '2004-05-28', 2.0)
     assert result == False, "❌ Missing data not flagged"
     print("✅ Validation correctly flagged insufficient data")
-    
-    return True
 
 
 def test_price_adjustment_function():
@@ -419,9 +412,6 @@ def test_price_adjustment_function():
     assert adjusted_df['Close_Adj'].iloc[0] < adjusted_df['Close'].iloc[0], \
         "❌ Adjusted price should be lower than original for pre-split dates"
     print(f"✅ Adjustment direction correct (reduces historical prices)")
-    
-    return True
-
 
 def test_export_format():
     """
@@ -467,8 +457,6 @@ def test_export_format():
     # Clean up
     Path(output_file).unlink()
     print(f"✅ Cleaned up test file: {output_file}")
-    
-    return True
 
 
 def run_all_tests():
@@ -521,10 +509,8 @@ def run_all_tests():
         print("✅ Stock split logic verified for Rp15B margin portfolio backtest")
         print("✅ Data integrity confirmed against KSEI/IDX historical records")
         print("✅ Memory optimization validated for Intel i3 Gen 10, 8GB RAM")
-        return 0
     else:
         print(f"\n⚠️ {total - passed} test(s) failed. Review errors above.")
-        return 1
 
 
 if __name__ == "__main__":
