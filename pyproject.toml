@@ -1,9 +1,5 @@
 # we just want to define the root file, when we perform this testing
-[tool.pytest.ini_options]
 pythonpath = ["."]
-
-
-[tool.bandit]
 # B101 (assert_used) accounted for 93 of bandit's 94 findings, all inside
 # tests/. Bandit flags assert generically because it's stripped under
 # `python -O`, which matters for assert-based security/validation checks
