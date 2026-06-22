@@ -1,5 +1,12 @@
-# we just want to define the root file, when we perform this testing
+[tool.pytest.ini_options]
+# pytest needs to know the repo root is on sys.path so `import pipeline`
+# resolves from test files. pythonpath = ["."] is the native pytest fix —
+# preferable to `pip install -e .` because this project is a CLI tool,
+# not a distributed library, so adding full packaging metadata
+# ([build-system], [project]) would be overhead with no consumer.
 pythonpath = ["."]
+
+[tool.bandit]
 # B101 (assert_used) accounted for 93 of bandit's 94 findings, all inside
 # tests/. Bandit flags assert generically because it's stripped under
 # `python -O`, which matters for assert-based security/validation checks
