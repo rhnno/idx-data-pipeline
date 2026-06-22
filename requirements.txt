@@ -10,7 +10,7 @@ requests>=2.33
 beautifulsoup4>=4.14
 pytest>=9.0
 pyyaml>=6.0
-yfinance>=1.4
+yfinance>=1.4.1
 # pandas.DataFrame.to_markdown() (used 7x in pipeline/data_quality.py for
 # report formatting) is an optional pandas feature backed by the
 # `tabulate` package - pandas does not bundle it. This was missing
